@@ -18,11 +18,19 @@ def create_dynamodb_table():
                 'AttributeName': 'name',
                 'KeyType': 'HASH'
             },
+            {
+                'AttributeName': 'id',
+                'KeyType': 'RANGE'
+            },
         ],
         AttributeDefinitions=[
             {
                 'AttributeName': 'name',
                 'AttributeType': 'S'
+            },
+            {
+                'AttributeName': 'id',
+                'AttributeType': 'N'
             },
         ],
         ProvisionedThroughput={
@@ -56,10 +64,11 @@ def insert_item_to_table(details, table):
     )
 
 
-def check_if_item_exist(item, table):
+def check_if_item_exist(details, table):
     response = table.get_item(
         Key={
-            'name': item
+            'name': details['name'],
+            'id': details['id']
         }
     )
     if 'Item' in response:
@@ -68,10 +77,11 @@ def check_if_item_exist(item, table):
         return False
 
 
-def get_an_item(item, table):
+def get_an_item(details, table):
     response = table.get_item(
         Key={
-            'name': item,
+            'name': details['name'],
+            'id': details['id']
         }
     )
     get_pokemon = response['Item']
@@ -93,12 +103,13 @@ while continue_drawing:
         # print(pokemon_name)
         # print(pokemon_url)
         pokemon_details = download_pokemons(pokemon_url)
-        if not check_if_item_exist(pokemon_name, pokemons_table):
+        if not check_if_item_exist(pokemon_details, pokemons_table):
             insert_item_to_table(pokemon_details, pokemons_table)
-        get_an_item(pokemon_name, pokemons_table)
+        get_an_item(pokemon_details, pokemons_table)
     elif draw == 'n':
         print("no pokemon will be drawn")
         continue_drawing = False
     else:
         print("invalid input. please enter 'y' or 'n' ")
 print("Goodbye!!!!")
+pokemons_table.delete()
