@@ -59,7 +59,7 @@ def insert_item_to_table(details, table):
             'name': details["name"],
             'id': details["id"],
             'weight': details["weight"],
-            'height': details["height"]
+            'height': details["height"],
         }
     )
 
@@ -85,8 +85,12 @@ def get_an_item(details, table):
         }
     )
     get_pokemon = response['Item']
-    for (k, v) in get_pokemon.items():
-        print(k, "=", v)
+    print(f'name: {get_pokemon["name"]}')
+    print(f'id: {get_pokemon["id"]}')
+    print(f'height: {get_pokemon["height"]}')
+    print(f'weight: {get_pokemon["weight"]}')
+    # for (k, v) in get_pokemon.items():
+    #     print(k, "=", v)
 
 
 load_dotenv()
@@ -113,3 +117,4 @@ while continue_drawing:
         print("invalid input. please enter 'y' or 'n' ")
 print("Goodbye!!!!")
 pokemons_table.delete()
+
